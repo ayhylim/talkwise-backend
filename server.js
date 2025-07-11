@@ -12,7 +12,13 @@ const server = http.createServer(async (req, res) => {
 
     // ✅ Handle CORS preflight OPTIONS
     if (req.method === "OPTIONS") {
-        res.writeHead(200);
+        res.writeHead(200, {
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+            "Access-Control-Allow-Headers": "Content-Type",
+            "Content-Length": "0",
+            "Content-Type": "text/plain"
+        });
         res.end();
         return;
     }
