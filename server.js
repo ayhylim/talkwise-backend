@@ -1,6 +1,6 @@
-import http from "http";
-import fetch from "node-fetch";
-import "dotenv/config";
+const http = require("http");
+const fetch = require("node-fetch");
+require("dotenv").config();
 
 const PORT = process.env.PORT || 3001;
 
@@ -22,7 +22,7 @@ const server = http.createServer(async (req, res) => {
         req.on("data", chunk => (body += chunk));
         req.on("end", async () => {
             try {
-                const { transcript } = JSON.parse(body);
+                const {transcript} = JSON.parse(body);
 
                 const prompt = `
 You are an AI assistant named TalkWise AI. 
@@ -58,9 +58,9 @@ ${transcript}
                     `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
                     {
                         method: "POST",
-                        headers: { "Content-Type": "application/json" },
+                        headers: {"Content-Type": "application/json"},
                         body: JSON.stringify({
-                            contents: [{ role: "user", parts: [{ text: prompt }] }]
+                            contents: [{role: "user", parts: [{text: prompt}]}]
                         })
                     }
                 );
@@ -79,19 +79,19 @@ ${transcript}
                     parsed = JSON.parse(jsonCandidate);
                 } catch (e) {
                     console.error("❌ Failed to parse Gemini response as JSON:", e);
-                    parsed = { summary: rawText }; // fallback
+                    parsed = {summary: rawText}; // fallback
                 }
 
-                res.writeHead(200, { "Content-Type": "application/json" });
+                res.writeHead(200, {"Content-Type": "application/json"});
                 res.end(JSON.stringify(parsed));
             } catch (err) {
-                res.writeHead(500, { "Content-Type": "application/json" });
-                res.end(JSON.stringify({ error: "Failed to summarize" }));
+                res.writeHead(500, {"Content-Type": "application/json"});
+                res.end(JSON.stringify({error: "Failed to summarize"}));
             }
         });
     } else {
-        res.writeHead(404, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({ error: "Endpoint not found" }));
+        res.writeHead(404, {"Content-Type": "application/json"});
+        res.end(JSON.stringify({error: "Endpoint not found"}));
     }
 });
 
